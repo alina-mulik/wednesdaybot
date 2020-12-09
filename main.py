@@ -6,6 +6,7 @@ from config import BOT_CONFIG
 import os
 
 PORT = int(os.environ.get('PORT', 5000))
+DEBUG = False
 
 X_texts = []  # реплики
 y = []  # их классы
