@@ -158,7 +158,7 @@ def bot(question):
 question = None
 
 while question not in ['exit', 'выход']:
-    question = input()
+    question = str(input())
     answer = bot(question)
     print(answer, stats)
 
