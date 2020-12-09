@@ -2,10 +2,10 @@ import random
 import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
-from config import  BOT_CONFIG
+from config import BOT_CONFIG
 import os
-PORT = int(os.environ.get('PORT', 5000))
 
+PORT = int(os.environ.get('PORT', 5000))
 
 X_texts = []  # реплики
 y = []  # их классы
@@ -86,9 +86,6 @@ qa_by_word_dataset_filtered = {word: qa_list
                                if len(qa_list) < 1000}
 
 
-
-
-
 def generate_answer_by_text(text):
     text = filter_text(text)
     words = text.split(' ')
@@ -110,21 +107,12 @@ def generate_answer_by_text(text):
             return answer
 
 
-
-
-
 def get_failure_phrase():
     phrases = BOT_CONFIG['failure_phrases']
     return random.choice(phrases)
 
 
-
-
-
 stats = [0, 0, 0]
-
-
-
 
 
 def bot(question):
@@ -152,26 +140,17 @@ def bot(question):
     return answer
 
 
-
-
-
 question = None
 
 while question not in ['exit', 'выход']:
-    question = str(input())
-    answer = bot(question)
-    print(answer, stats)
-
-
-
-
-
-
+    try:
+        question = str(input())
+        answer = bot(question)
+        print(answer, stats)
+    except EOFError as e:
+        print(e)
 
 get_ipython().system(' pip install python-telegram-bot')
-
-
-
 
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
@@ -213,12 +192,4 @@ def main():
     updater.idle()
 
 
-
-
-
 main()
-
-
-
-
-
