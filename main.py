@@ -208,7 +208,7 @@ def main():
     # Start the Bot
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
-                          url_path="1476991825:AAEeNFK-fBMCi_C1soDqctS7oHPGxkze1Ss"")
+                          url_path="1476991825:AAEeNFK-fBMCi_C1soDqctS7oHPGxkze1Ss")
     updater.bot.setWebhook('https://wednesdayaddams.herokuapp.com/' + "1476991825:AAEeNFK-fBMCi_C1soDqctS7oHPGxkze1Ss")
     updater.idle()
 
