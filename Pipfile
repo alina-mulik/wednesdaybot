@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 nltk = "*"
 sklearn = "*"
+pytelegrambotapi = "*"
+python-telegram-bot = "*"
 
 [dev-packages]
 

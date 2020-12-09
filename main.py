@@ -5,7 +5,6 @@ from sklearn.svm import LinearSVC
 from config import  BOT_CONFIG
 
 
-
 X_texts = []  # реплики
 y = []  # их классы
 
@@ -14,10 +13,12 @@ for intent, intent_data in BOT_CONFIG['intents'].items():
         X_texts.append(example)
         y.append(intent)
 
-
 vectorizer = TfidfVectorizer(analyzer='char_wb', ngram_range=(2, 4))
 X = vectorizer.fit_transform(X_texts)
 clf = LinearSVC().fit(X, y)
+
+
+# In[63]:
 
 
 def get_intent(question):
@@ -32,19 +33,26 @@ def get_intent(question):
             return intent
 
 
+# In[25]:
+
+
 def get_answer_by_intent(intent):
     if intent in BOT_CONFIG['intents']:
         phrases = BOT_CONFIG['intents'][intent]['responses']
         return random.choice(phrases)
 
 
+# In[35]:
+
+
 def filter_text(text):
     text = text.lower()
-    text = [c for c in text if c in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefjhijklmnopqrstuvwxyz- ']
+    text = [c for c in text if c in 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя- ']
     text = ''.join(text)
     return text
 
-with open('dialogues.txt', encoding='utf-8') as f:
+
+with open('dialogues.txt') as f:
     content = f.read()
 dialogues = [dialogue_line.split('\n') for dialogue_line in content.split('\n\n')]
 
@@ -76,6 +84,9 @@ qa_by_word_dataset_filtered = {word: qa_list
                                if len(qa_list) < 1000}
 
 
+
+
+
 def generate_answer_by_text(text):
     text = filter_text(text)
     words = text.split(' ')
@@ -96,11 +107,22 @@ def generate_answer_by_text(text):
         if dist_percentage < 0.3:
             return answer
 
+
+
+
+
 def get_failure_phrase():
     phrases = BOT_CONFIG['failure_phrases']
     return random.choice(phrases)
 
+
+
+
+
 stats = [0, 0, 0]
+
+
+
 
 
 def bot(question):
@@ -127,9 +149,71 @@ def bot(question):
     answer = get_failure_phrase()
     return answer
 
+
+
+
+
 question = None
 
 while question not in ['exit', 'выход']:
     question = input()
     answer = bot(question)
     print(answer, stats)
+
+
+
+
+
+
+
+get_ipython().system(' pip install python-telegram-bot')
+
+
+
+
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+
+def start(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /start is issued."""
+    update.message.reply_text('Hi!')
+
+
+def help_command(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /help is issued."""
+    update.message.reply_text('Help!')
+
+
+def echo(update: Update, context: CallbackContext) -> None:
+    """Echo the user message."""
+    answer = bot(update.message.text)
+    update.message.reply_text(answer)
+    print(stats)
+    print('-', update.message.text)
+    print('-', answer)
+    print()
+
+
+def main():
+    """Start the bot."""
+    updater = Updater("1476991825:AAEeNFK-fBMCi_C1soDqctS7oHPGxkze1Ss", use_context=True)
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+    # Start the Bot
+    updater.start_polling()
+    updater.idle()
+
+
+
+
+
+main()
+
+
+
+
+
