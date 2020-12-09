@@ -3,6 +3,8 @@ import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
 from config import  BOT_CONFIG
+import os
+PORT = int(os.environ.get('PORT', 5000))
 
 
 X_texts = []  # реплики
@@ -204,7 +206,10 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
 
     # Start the Bot
-    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path="1476991825:AAEeNFK-fBMCi_C1soDqctS7oHPGxkze1Ss"")
+    updater.bot.setWebhook('https://wednesdayaddams.herokuapp.com/' + "1476991825:AAEeNFK-fBMCi_C1soDqctS7oHPGxkze1Ss")
     updater.idle()
 
 
